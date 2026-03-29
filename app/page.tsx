@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Script from "next/script";
 import { useEffect, useState } from "react";
 
 /* ───── data ───── */
@@ -76,6 +77,11 @@ const TESTIMONIALS = [
 ];
 
 const GALLERY = Array.from({ length: 8 }, (_, i) => `/images/gallery-${i + 1}.jpg`);
+const INSTAGRAM_REELS = [
+  "https://www.instagram.com/reel/DSVCKBsDAR7/embed/",
+  "https://www.instagram.com/reel/DNBSvy-IqbC/embed/",
+  "https://www.instagram.com/reel/DBEsnqao_3x/embed/",
+];
 
 /* ───── icons (inline svg) ───── */
 function StarIcon({ className }: { className?: string }) {
@@ -100,6 +106,32 @@ function MailIcon() {
   return <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>;
 }
 
+function FacebookIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M13.5 21v-7.2h2.4l.4-2.8h-2.8V9.2c0-.8.2-1.4 1.4-1.4H16V5.3c-.2 0-.9-.1-1.8-.1-1.8 0-3 1.1-3 3.2V11H8.8v2.8h2.4V21h2.3Z" />
+    </svg>
+  );
+}
+
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+function TikTokIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M14.5 3c.3 1.9 1.4 3.1 3.2 3.6v2.5c-1.2 0-2.3-.3-3.2-.9v6.1c0 3.3-2.2 5.7-5.5 5.7-3 0-5.2-2.2-5.2-5 0-3 2.4-5.2 5.7-5.2.3 0 .7 0 1 .1v2.7c-.3-.1-.6-.2-.9-.2-1.6 0-2.9 1-2.9 2.5 0 1.4 1 2.5 2.4 2.5 1.6 0 2.6-1.1 2.6-3.2V3h2.8Z" />
+    </svg>
+  );
+}
+
 /* ───── component ───── */
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
@@ -113,6 +145,14 @@ export default function Home() {
 
   return (
     <>
+      <Script
+        src="https://cdn.userway.org/widget.js"
+        strategy="afterInteractive"
+        data-account="ZMs9cc17RE"
+        data-color="#ec4920"
+        data-widget_layout="full"
+      />
+
       {/* ====== HEADER ====== */}
       <header
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
@@ -214,26 +254,26 @@ export default function Home() {
               טומי רול רמת גן - מוסד קולינרי של אוכל רחוב כבר 21 שנה
             </h2>
             <p className="text-gray-400 mb-4">
-              הכי טרי, הכי טעים, בלי פשרות. אנטרקוט שנפרס במקום, המבורגרים שנטחנים במקום, שניצל קריספי שמוכן לפי הזמנה, ורול עוף מהפנט. תורים שמעידים על תחלופה גבוהה - אך השירות מהיר ומתקתק את כולם.
+              הכי טרי, הכי טעים, בלי פשרות. אנטריקוט שנפרס במקום, המבורגרים שנטחנים במקום, שניצל קריספי שמוכן לפי הזמנה, ורול עוף מהפנט. תורים שמעידים על תחלופה גבוהה - אך השירות מהיר ומתקתק את כולם.
             </p>
             <p className="text-gray-400 mb-6">
               הסניף ברמת גן הוא מוקד עלייה לרגל, ובעקבותיו נפתחו שלושה סניפים גדולים ומצליחים. אפשר לאכול במקום במסעדה, או להזמין עם שירות משלוחים משלנו עד הבית.
             </p>
             <a href="#contact" className="inline-flex items-center gap-2 bg-[rgb(232,73,33)] hover:bg-[rgb(200,60,25)] text-white px-8 py-3 rounded-full font-semibold transition-colors">
-              הזמינו עכשיו →
+              ← הזמינו עכשיו
             </a>
           </div>
           <div className="flex flex-col gap-6">
             <div className="relative rounded-2xl overflow-hidden">
               <Image src="/images/about-rolls-tray.jpg" alt="מגש רולים עם צ'יפס וטבעות בצל" width={600} height={350} className="w-full object-cover h-56 md:h-64" />
-              <div className="absolute bottom-4 left-4 bg-[rgb(232,73,33)] text-white px-4 py-2 rounded-xl text-center">
+              <div className="absolute bottom-4 right-4 bg-[rgb(232,73,33)] text-white px-4 py-2 rounded-xl text-center">
                 <span className="block text-2xl font-bold">21+</span>
                 <span className="text-xs">שנות ניסיון</span>
               </div>
             </div>
             <div className="relative rounded-2xl overflow-hidden">
               <Image src="/images/about-hamburgers.jpg" alt="המבורגרים מפנקים של טומי רול" width={600} height={350} className="w-full object-cover h-56 md:h-64" />
-              <div className="absolute bottom-4 left-4 bg-[rgb(232,73,33)] text-white px-4 py-2 rounded-xl text-center">
+              <div className="absolute bottom-4 right-4 bg-[rgb(232,73,33)] text-white px-4 py-2 rounded-xl text-center">
                 <span className="block text-2xl font-bold">50K+</span>
                 <span className="text-xs">לקוחות מרוצים</span>
               </div>
@@ -261,7 +301,7 @@ export default function Home() {
           </div>
           <div className="text-center mt-8">
             <a href="#contact" className="inline-flex items-center gap-2 bg-[rgb(232,73,33)] hover:bg-[rgb(200,60,25)] text-white px-8 py-3 rounded-full font-semibold transition-colors">
-              הזמינו עכשיו →
+              ← הזמינו עכשיו
             </a>
           </div>
         </div>
@@ -276,22 +316,25 @@ export default function Home() {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">עקבו אחרינו באינסטגרם</h2>
           <p className="text-gray-400 mb-10">@tommyrollbar | רגעים טעימים מהמטבח שלנו</p>
           <div className="grid md:grid-cols-3 gap-6 mb-8">
-            {[0, 1, 2].map((i) => (
-              <div key={i} className="bg-white bg-opacity-5 border border-white border-opacity-10 rounded-2xl h-80 flex items-center justify-center">
-                <div className="text-center">
-                  <span className="text-5xl mb-3 block">📷</span>
-                  <p className="text-white text-opacity-50 text-sm">Instagram Reel</p>
-                </div>
+            {INSTAGRAM_REELS.map((src, i) => (
+              <div key={src} className="overflow-hidden rounded-2xl border border-white border-opacity-10 bg-white bg-opacity-5 shadow-lg">
+                <iframe
+                  src={src}
+                  title={`Instagram Reel ${i + 1}`}
+                  className="h-[26rem] w-full"
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  loading="lazy"
+                />
               </div>
             ))}
           </div>
           <div className="flex justify-center gap-2 mb-8">
-            {[0, 1, 2].map((i) => (
-              <span key={i} className={`w-3 h-3 rounded-full ${i === 0 ? "bg-gradient-to-r from-purple-500 to-pink-500" : "bg-white bg-opacity-30"}`} />
+            {INSTAGRAM_REELS.map((_, i) => (
+              <span key={i} className={`h-3 w-3 rounded-full ${i === 0 ? "bg-gradient-to-r from-purple-500 to-pink-500" : "bg-white bg-opacity-30"}`} />
             ))}
           </div>
           <a href="https://www.instagram.com/tommyrollbar" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border-2 border-white text-white hover:bg-white hover:bg-opacity-10 px-8 py-3 rounded-full font-semibold transition-colors">
-            📷 עקבו אחרינו באינסטגרם
+            <InstagramIcon className="h-5 w-5" /> עקבו אחרינו באינסטגרם
           </a>
         </div>
       </section>
@@ -463,9 +506,15 @@ export default function Home() {
             <h3 className="font-bold text-gray-800 mb-2">עקבו אחרינו ברשתות החברתיות</h3>
             <p className="text-gray-500 text-sm mb-4">הצטרפו לקהילה שלנו וקבלו עדכונים על מבצעים ומנות חדשות</p>
             <div className="flex justify-center gap-4">
-              <a href="https://www.facebook.com/share/1Adx2eb9gD/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center text-xl transition-colors" aria-label="Facebook">f</a>
-              <a href="https://www.instagram.com/tommyrollbar" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 hover:opacity-80 text-white rounded-full flex items-center justify-center text-xl transition-opacity" aria-label="Instagram">📷</a>
-              <a href="https://www.tiktok.com/@tommyrollbar" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-black hover:bg-gray-800 text-white rounded-full flex items-center justify-center text-xl transition-colors" aria-label="TikTok">♪</a>
+              <a href="https://www.facebook.com/share/1Adx2eb9gD/" target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-white transition-colors hover:bg-blue-700" aria-label="Facebook">
+                <FacebookIcon className="h-6 w-6" />
+              </a>
+              <a href="https://www.instagram.com/tommyrollbar?igsh=anY1NjRyNmR1cnE1" target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 text-white transition-opacity hover:opacity-80" aria-label="Instagram">
+                <InstagramIcon className="h-6 w-6" />
+              </a>
+              <a href="https://www.tiktok.com/@tommyrollbar?_r=1&_t=ZS-93G7LtbLKPX" target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-gray-800" aria-label="TikTok">
+                <TikTokIcon className="h-5 w-5" />
+              </a>
             </div>
           </div>
         </div>
@@ -481,9 +530,15 @@ export default function Home() {
                 מסעדת טורטיות והמבורגרים משפחתית מעל כ-20 שנים, המציעה אוכל רחוב עממי וטעים במחיר הוגן.
               </p>
               <div className="flex gap-3">
-                <a href="https://www.facebook.com/share/1Adx2eb9gD/" target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-white bg-opacity-10 hover:bg-opacity-20 text-white rounded-full flex items-center justify-center transition-colors" aria-label="Facebook">f</a>
-                <a href="https://www.instagram.com/tommyrollbar" target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-white bg-opacity-10 hover:bg-opacity-20 text-white rounded-full flex items-center justify-center transition-colors" aria-label="Instagram">📷</a>
-                <a href="https://www.tiktok.com/@tommyrollbar" target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-white bg-opacity-10 hover:bg-opacity-20 text-white rounded-full flex items-center justify-center transition-colors" aria-label="TikTok">♪</a>
+                <a href="https://www.facebook.com/share/1Adx2eb9gD/" target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full bg-white bg-opacity-10 text-white transition-colors hover:bg-opacity-20" aria-label="Facebook">
+                  <FacebookIcon className="h-4 w-4" />
+                </a>
+                <a href="https://www.instagram.com/tommyrollbar?igsh=anY1NjRyNmR1cnE1" target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full bg-white bg-opacity-10 text-white transition-colors hover:bg-opacity-20" aria-label="Instagram">
+                  <InstagramIcon className="h-4 w-4" />
+                </a>
+                <a href="https://www.tiktok.com/@tommyrollbar?_r=1&_t=ZS-93G7LtbLKPX" target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center rounded-full bg-white bg-opacity-10 text-white transition-colors hover:bg-opacity-20" aria-label="TikTok">
+                  <TikTokIcon className="h-4 w-4" />
+                </a>
               </div>
             </div>
             <div>
@@ -521,9 +576,9 @@ export default function Home() {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-white text-opacity-40 text-xs">
               <p>© 2026 Tommy Roll. כל הזכויות שמורות. - צילום מנות: יעל בונפיס</p>
               <div className="flex gap-4">
-                <a href="/terms" className="hover:text-white transition-colors">תנאי שימוש</a>
-                <a href="/privacy-policy" className="hover:text-white transition-colors">מדיניות פרטיות</a>
-                <a href="#" className="hover:text-white transition-colors">הצהרת נגישות</a>
+                <a href="https://tommyrollbar.co.il/terms" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">תנאי שימוש</a>
+                <a href="https://tommyrollbar.co.il/privacy-policy" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">מדיניות פרטיות</a>
+                <a href="https://tommyrollbar.co.il/%D7%94%D7%A6%D7%94%D7%A8%D7%AA-%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">הצהרת נגישות</a>
               </div>
             </div>
             <p className="text-center text-white text-opacity-30 text-xs mt-4">
