@@ -616,9 +616,9 @@ export default function Home() {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-white text-opacity-40 text-xs">
               <p>© 2026 Tommy Roll. כל הזכויות שמורות. - צילום מנות: יעל בונפיס</p>
               <div className="flex gap-4">
-                <a href="https://tommyrollbar.co.il/terms" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">תנאי שימוש</a>
-                <a href="https://tommyrollbar.co.il/privacy-policy" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">מדיניות פרטיות</a>
-                <a href="https://tommyrollbar.co.il/%D7%94%D7%A6%D7%94%D7%A8%D7%AA-%D7%A0%D7%92%D7%99%D7%A9%D7%95%D7%AA" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">הצהרת נגישות</a>
+                <a href="/terms" className="hover:text-white transition-colors">תנאי שימוש</a>
+                <a href="/privacy-policy" className="hover:text-white transition-colors">מדיניות פרטיות</a>
+                <a href="/הצהרת-נגישות" className="hover:text-white transition-colors">הצהרת נגישות</a>
               </div>
             </div>
             <p className="text-center text-white text-opacity-30 text-xs mt-4">
