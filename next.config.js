@@ -36,6 +36,14 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: "/הצהרת-נגישות",
+        destination: "/accessibility-statement",
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
