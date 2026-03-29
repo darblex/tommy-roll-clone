@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Script from "next/script";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /* ───── data ───── */
 const NAV_ITEMS = [
@@ -136,12 +136,41 @@ function TikTokIcon({ className }: { className?: string }) {
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [activeReel, setActiveReel] = useState(0);
+  const instagramRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const h = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", h, { passive: true });
     return () => window.removeEventListener("scroll", h);
   }, []);
+
+  const scrollToReel = (index: number) => {
+    const container = instagramRef.current;
+    if (!container) return;
+    const child = container.children[index] as HTMLElement | undefined;
+    child?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    setActiveReel(index);
+  };
+
+  const handleInstagramScroll = () => {
+    const container = instagramRef.current;
+    if (!container || window.innerWidth >= 768) return;
+    const children = Array.from(container.children) as HTMLElement[];
+    if (!children.length) return;
+    const containerCenter = container.scrollLeft + container.clientWidth / 2;
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+    children.forEach((child, index) => {
+      const childCenter = child.offsetLeft + child.clientWidth / 2;
+      const distance = Math.abs(childCenter - containerCenter);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+    setActiveReel(closestIndex);
+  };
 
   return (
     <>
@@ -153,6 +182,7 @@ export default function Home() {
         data-widget_layout="full"
       />
 
+      <main id="main-content">
       {/* ====== HEADER ====== */}
       <header
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
@@ -260,7 +290,7 @@ export default function Home() {
               הסניף ברמת גן הוא מוקד עלייה לרגל, ובעקבותיו נפתחו שלושה סניפים גדולים ומצליחים. אפשר לאכול במקום במסעדה, או להזמין עם שירות משלוחים משלנו עד הבית.
             </p>
             <a href="#contact" className="inline-flex items-center gap-2 bg-[rgb(232,73,33)] hover:bg-[rgb(200,60,25)] text-white px-8 py-3 rounded-full font-semibold transition-colors">
-              ← הזמינו עכשיו
+              הזמינו עכשיו
             </a>
           </div>
           <div className="flex flex-col gap-6">
@@ -301,7 +331,7 @@ export default function Home() {
           </div>
           <div className="text-center mt-8">
             <a href="#contact" className="inline-flex items-center gap-2 bg-[rgb(232,73,33)] hover:bg-[rgb(200,60,25)] text-white px-8 py-3 rounded-full font-semibold transition-colors">
-              ← הזמינו עכשיו
+              הזמינו עכשיו
             </a>
           </div>
         </div>
@@ -315,9 +345,13 @@ export default function Home() {
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">עקבו אחרינו באינסטגרם</h2>
           <p className="text-gray-400 mb-10">@tommyrollbar | רגעים טעימים מהמטבח שלנו</p>
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <div
+            ref={instagramRef}
+            onScroll={handleInstagramScroll}
+            className="mb-8 grid snap-x snap-mandatory grid-flow-col auto-cols-[88%] gap-4 overflow-x-auto pb-2 md:grid-flow-row md:grid-cols-3 md:auto-cols-auto md:gap-6 md:overflow-visible"
+          >
             {INSTAGRAM_REELS.map((src, i) => (
-              <div key={src} className="overflow-hidden rounded-2xl border border-white border-opacity-10 bg-white bg-opacity-5 shadow-lg">
+              <div key={src} className="snap-center overflow-hidden rounded-2xl border border-white border-opacity-10 bg-white bg-opacity-5 shadow-lg">
                 <iframe
                   src={src}
                   title={`Instagram Reel ${i + 1}`}
@@ -328,9 +362,15 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div className="flex justify-center gap-2 mb-8">
+          <div className="mb-8 flex justify-center gap-2">
             {INSTAGRAM_REELS.map((_, i) => (
-              <span key={i} className={`h-3 w-3 rounded-full ${i === 0 ? "bg-gradient-to-r from-purple-500 to-pink-500" : "bg-white bg-opacity-30"}`} />
+              <button
+                key={i}
+                type="button"
+                aria-label={`מעבר לריל ${i + 1}`}
+                onClick={() => scrollToReel(i)}
+                className={`h-3 w-3 rounded-full transition-all ${i === activeReel ? "bg-gradient-to-r from-purple-500 to-pink-500" : "bg-white bg-opacity-30 hover:bg-opacity-50"}`}
+              />
             ))}
           </div>
           <a href="https://www.instagram.com/tommyrollbar" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border-2 border-white text-white hover:bg-white hover:bg-opacity-10 px-8 py-3 rounded-full font-semibold transition-colors">
@@ -359,21 +399,21 @@ export default function Home() {
                   <h3 className="text-xl font-bold text-gray-800 mb-4">{b.name}</h3>
                   <div className="space-y-3 mb-5">
                     <div className="flex items-start gap-3">
-                      <span className="text-[rgb(232,73,33)] mt-0.5"><MapIcon /></span>
+                      <span className="mt-0.5 text-[rgb(176,58,26)]"><MapIcon /></span>
                       <div>
                         <p className="text-gray-500 text-xs">כתובת:</p>
                         <p className="text-gray-700 text-sm">{b.address}</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="text-[rgb(232,73,33)] mt-0.5"><PhoneIcon /></span>
+                      <span className="mt-0.5 text-[rgb(176,58,26)]"><PhoneIcon /></span>
                       <div>
                         <p className="text-gray-500 text-xs">טלפון:</p>
-                        <a href={`tel:${b.phone}`} className="text-[rgb(232,73,33)] text-sm font-semibold">{b.phone}</a>
+                        <a href={`tel:${b.phone}`} className="text-[rgb(176,58,26)] text-sm font-semibold">{b.phone}</a>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="text-[rgb(232,73,33)] mt-0.5"><ClockIcon /></span>
+                      <span className="mt-0.5 text-[rgb(176,58,26)]"><ClockIcon /></span>
                       <div>
                         <p className="text-gray-500 text-xs">שעות פתיחה:</p>
                         {b.hours.map((h, i) => (
@@ -386,7 +426,7 @@ export default function Home() {
                     <a href="#contact" className="flex-1 text-center bg-[rgb(232,73,33)] hover:bg-[rgb(200,60,25)] text-white px-4 py-2.5 rounded-full text-sm font-semibold transition-colors inline-flex items-center justify-center gap-1">
                       🛒 הזמינו עכשיו
                     </a>
-                    <a href={`https://waze.com/ul?q=${encodeURIComponent(b.address)}`} target="_blank" rel="noopener noreferrer" className="flex-1 text-center border border-[rgb(232,73,33)] text-[rgb(232,73,33)] hover:bg-[rgb(232,73,33)] hover:bg-opacity-10 px-4 py-2.5 rounded-full text-sm font-semibold transition-colors inline-flex items-center justify-center gap-1">
+                    <a href={`https://waze.com/ul?q=${encodeURIComponent(b.address)}`} target="_blank" rel="noopener noreferrer" className="flex-1 text-center border border-[rgb(232,73,33)] text-[rgb(176,58,26)] hover:bg-[rgb(232,73,33)] hover:bg-opacity-10 px-4 py-2.5 rounded-full text-sm font-semibold transition-colors inline-flex items-center justify-center gap-1">
                       📍 נווטו אלינו
                     </a>
                   </div>
@@ -478,23 +518,23 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <div className="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-              <div className="w-14 h-14 mx-auto mb-4 bg-[rgb(232,73,33)] bg-opacity-10 rounded-full flex items-center justify-center text-[rgb(232,73,33)]">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[rgb(232,73,33)] bg-opacity-10 text-[rgb(176,58,26)]">
                 <PhoneIcon />
               </div>
               <h3 className="font-bold text-gray-800 mb-1">טלפון ראשי</h3>
-              <a href="tel:03-574-2822" className="text-[rgb(232,73,33)] font-semibold">03-574-2822</a>
+              <a href="tel:03-574-2822" className="font-semibold text-[rgb(176,58,26)]">03-574-2822</a>
               <p className="text-gray-400 text-sm mt-1">א׳-ה׳ 12:00-00:00</p>
             </div>
             <div className="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-              <div className="w-14 h-14 mx-auto mb-4 bg-[rgb(232,73,33)] bg-opacity-10 rounded-full flex items-center justify-center text-[rgb(232,73,33)]">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[rgb(232,73,33)] bg-opacity-10 text-[rgb(176,58,26)]">
                 <MailIcon />
               </div>
               <h3 className="font-bold text-gray-800 mb-1">אימייל</h3>
-              <a href="mailto:info@tommyrollbar.co.il" className="text-[rgb(232,73,33)] font-semibold text-sm">info@tommyrollbar.co.il</a>
+              <a href="mailto:info@tommyrollbar.co.il" className="text-sm font-semibold text-[rgb(176,58,26)]">info@tommyrollbar.co.il</a>
               <p className="text-gray-400 text-sm mt-1">נענה תוך 24 שעות</p>
             </div>
             <div className="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
-              <div className="w-14 h-14 mx-auto mb-4 bg-[rgb(232,73,33)] bg-opacity-10 rounded-full flex items-center justify-center text-[rgb(232,73,33)]">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[rgb(232,73,33)] bg-opacity-10 text-[rgb(176,58,26)]">
                 <MapIcon />
               </div>
               <h3 className="font-bold text-gray-800 mb-1">כתובת ראשית</h3>
@@ -587,6 +627,7 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      </main>
     </>
   );
 }

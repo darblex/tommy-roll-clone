@@ -24,7 +24,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="he" dir="rtl" className={rubik.className}>
-      <body>{children}</body>
+      <body>
+        <a
+          href="#main-content"
+          className="sr-only fixed right-4 top-4 z-[100] rounded-full bg-[rgb(25,14,11)] px-4 py-2 text-sm font-semibold text-white shadow-lg focus:not-sr-only"
+        >
+          דלג לתוכן הראשי
+        </a>
+        {children}
+      </body>
     </html>
   );
 }
