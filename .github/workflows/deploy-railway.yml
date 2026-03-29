@@ -1,0 +1,75 @@
+name: Verify and Deploy to Railway
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tommy-roll-clone-production
+  cancel-in-progress: true
+
+env:
+  RAILWAY_PROJECT_ID: 4b798871-cff0-4262-b545-99e2b81283dd
+  RAILWAY_ENVIRONMENT_ID: 153eb060-e286-45b2-b06e-34d860c58052
+  RAILWAY_SERVICE_ID: 7569c3ac-3b3e-45d7-baf5-5584b478b84e
+  PRODUCTION_URL: https://tommy-roll-clone-production.up.railway.app
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Production build
+        run: npm run build
+
+  deploy:
+    needs: verify
+    runs-on: ubuntu-latest
+    container: ghcr.io/railwayapp/cli:latest
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to Railway
+        run: railway up --ci --service "$RAILWAY_SERVICE_ID" --environment "$RAILWAY_ENVIRONMENT_ID" --project "$RAILWAY_PROJECT_ID"
+
+  smoke-test:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for production and verify 200 OK
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..18}; do
+            status=$(curl -sS -o /tmp/tommy_response.html -w "%{http_code}" "$PRODUCTION_URL" || true)
+            if [ "$status" = "200" ]; then
+              echo "Production is live"
+              exit 0
+            fi
+            echo "Attempt $i: got status $status, waiting 10s..."
+            sleep 10
+          done
+          echo "Production did not become healthy in time"
+          cat /tmp/tommy_response.html || true
+          exit 1
